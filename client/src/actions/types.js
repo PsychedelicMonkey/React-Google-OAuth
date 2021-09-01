@@ -1,3 +1,8 @@
+// Alerts
+export const GET_ALERT = 'GET_ALERT';
+export const REMOVE_ALERT = 'REMOVE_ALERT';
+
+// Authentication
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';

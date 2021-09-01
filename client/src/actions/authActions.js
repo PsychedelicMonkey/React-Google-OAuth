@@ -6,6 +6,7 @@ import {
   REGISTER_ERROR,
   REGISTER_SUCCESS,
 } from './types';
+import { getAlert } from './alertActions';
 import axios from 'axios';
 
 export const checkUser = () => async dispatch => {
@@ -22,7 +23,7 @@ export const checkUser = () => async dispatch => {
   }
 }
 
-export const loginUser = (email, password) => async dispatch => {
+export const loginUser = (email, password) => async (dispatch, getState) => {
   try {
     const res = await axios.post('/api/auth/login', 
       JSON.stringify({ email, password }), {
@@ -34,14 +35,18 @@ export const loginUser = (email, password) => async dispatch => {
       type: LOGIN_SUCCESS,
       payload: res.data,
     });
+
+    const name = getState().auth.user.firstName;
+    dispatch(getAlert(`Welcome ${name}!`, 'Log In Success', 'success'));
   } catch (err) {
+    dispatch(getAlert(err.response.data.msg, 'Log In Error', 'danger'));
     dispatch({
       type: LOGIN_ERROR,
     });
   }
 }
 
-export const registerUser = (email, firstName, lastName, password, password2) => async dispatch => {
+export const registerUser = (email, firstName, lastName, password, password2) => async (dispatch, getState) => {
   try {
     const res = await axios.post('/api/auth/register', 
       JSON.stringify({ email, firstName, lastName, password, password2 }), {
@@ -53,7 +58,11 @@ export const registerUser = (email, firstName, lastName, password, password2) =>
       type: REGISTER_SUCCESS,
       payload: res.data,
     });
+
+    const name = getState().auth.user.firstName;
+    dispatch(getAlert(`Welcome ${name}!`, 'Sign Up Success', 'success'));
   } catch (err) {
+    dispatch(getAlert(err.response.data.msg, 'Sign Up Error', 'danger'));
     dispatch({
       type: REGISTER_ERROR,
     });
@@ -66,6 +75,7 @@ export const logoutUser = () => async dispatch => {
     dispatch({
       type: LOGOUT_SUCCESS,
     });
+    dispatch(getAlert('You are logged out', 'Log Out Success', 'success'));
   } catch (err) {
     dispatch({
       type: LOGOUT_ERROR,

@@ -1,11 +1,12 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { Container } from 'reactstrap';
 
 class Home extends Component {
   render() {
     return (
-      <div>
+      <Container>
         <h1>Home</h1>  
-      </div>
+      </Container>
     );
   }
 }
