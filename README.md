@@ -2,7 +2,7 @@
 
 Boilerplate MERN Stack application with passport.js user authentication.
 
-Passport is configured to sinulataneously use Local and Google authentication strategies.
+Passport is configured to simultaneously use Local and Google authentication strategies.
 
 ## NOTE
 Google authentication is only set up to work for production builds. The React client must be compiled into static assets using ```npm run build```.
