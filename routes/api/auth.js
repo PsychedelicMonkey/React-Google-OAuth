@@ -5,6 +5,21 @@ const passport = require('passport');
 
 const User = require('../../models/User');
 
+const outputUser = req => {
+  if (req.isAuthenticated()) {
+    const { _id, firstName, lastName } = req.user;
+    return { _id, firstName, lastName };
+  }
+}
+
+router.get('/checkuser', (req, res) => {
+  if (req.isAuthenticated()) {
+    return res.json(outputUser(req));
+  }
+
+  res.status(401).json(null);
+});
+
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
 
@@ -13,7 +28,7 @@ router.post('/login', (req, res) => {
   }
 
   passport.authenticate('local')(req, res, () => {
-    res.json(req.user);
+    res.json(outputUser(req));
   });
 });
 
@@ -37,10 +52,18 @@ router.post('/register', async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
     user = await User.create({ email, firstName, lastName, password: hash });
-    res.status(201).json({ msg: 'User created' });
+    
+    passport.authenticate('local')(req, res, () => {
+      res.status(201).json(outputUser(req));
+    });
   } catch (err) {
     res.status(500).json({ msg: 'Server error' });
   }
+});
+
+router.get('/logout', (req, res) => {
+  req.logout();
+  res.json(null);
 });
 
 module.exports = router;
