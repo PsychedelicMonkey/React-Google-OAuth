@@ -9,6 +9,7 @@ import {
   Label
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 class Login extends Component {
   constructor(props) {
@@ -32,7 +33,13 @@ class Login extends Component {
   onSubmit = e => {
     e.preventDefault();
 
-    alert(JSON.stringify(this.state));
+    axios.post('/api/auth/login', JSON.stringify(this.state), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(res => console.log(res.data))
+    .catch(err => console.log(err));
   }
 
   render() {
